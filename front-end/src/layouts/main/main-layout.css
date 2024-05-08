@@ -1,0 +1,19 @@
+
+.page-body-with-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;
+  min-height: 600px;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.page-main-max-width-div {
+  flex: 0 1 1024px;
+}

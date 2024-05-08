@@ -1,0 +1,95 @@
+
+.calendar-component {
+  border-radius: 8px;
+  border: 1px solid var(--light-grey);
+  background-color: var(--almost-white);
+  color: var(--dark-grey);
+}
+
+.calendar-header {
+  padding: 8px 8px 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.calendar-navigation {
+  display: flex;
+  gap: 4px;
+}
+
+.calendar-navigation button {
+  border-radius: 4px;
+  border: 0;
+  padding: 2px 16px;
+}
+
+.calendar-navigation button:hover {
+  cursor: pointer;
+  background-color: var(--just-white);
+}
+
+.calendar-navigation button:active {
+  background-color: var(--not-white);
+  transform: translateY(1px);
+}
+
+table.calendar-table {
+  border-spacing: 3px;
+  width: 100%;
+}
+
+.calendar-table th,
+.calendar-table td {
+  padding: 0;
+  height: 34px;
+}
+
+.calendar-number-day-input {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+}
+
+.calendar-number-day-input:checked+label {
+  outline: 5px auto Highlight;
+  outline: 5px auto -webkit-focus-ring-color;
+}
+
+.calendar-number-day-input:focus+label {
+  outline: 5px auto Highlight;
+  outline: 5px auto -webkit-focus-ring-color;
+  background-color: var(--just-white);
+}
+
+.calendar-number-day-label {
+  display: flex;
+  position: relative;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.calendar-number-day-label.prev-day,
+.calendar-number-day-label.next-day {
+  color: var(--mid-grey);
+}
+
+.calendar-number-day-label:hover {
+  cursor: pointer;
+  background-color: var(--just-white);
+}
+
+.calendar-number-day-label.today::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 4px;
+  bottom: 4px;
+  background-color: var(--accent-color-1);
+}

@@ -1,0 +1,14 @@
+
+footer.page-footer {
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.footer-max-width-div {
+  flex: 0 1 1024px;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid var(--light-grey);
+}

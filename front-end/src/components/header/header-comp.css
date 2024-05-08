@@ -1,0 +1,21 @@
+
+header.page-header {
+  display: flex;
+  justify-content: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid #cccccc;
+  background-color: var(--almost-white);
+}
+
+.page-header-max-width-div {
+  flex: 0 1 1024px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-header-navigation-div {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}

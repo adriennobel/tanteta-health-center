@@ -1,0 +1,40 @@
+
+.appointment-component {
+  padding: 8px;
+  border-radius: 4px;
+  display: block;
+}
+
+.appointment-component:hover {
+  cursor: pointer;
+  background-color: var(--just-white);
+}
+
+.appt-item-title {
+  font-weight: 500;
+}
+
+.appt-item-body {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.appt-item-date-time-div {
+  font-size: 75%;
+}
+
+.appt-item-button-ada-only:not(:focus) {
+  width: 0px;
+  height: 0px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+
+.appt-item-button-ada-only:focus {
+  padding: 4px 8px;
+  border: none;
+  font-size: 75%;
+}

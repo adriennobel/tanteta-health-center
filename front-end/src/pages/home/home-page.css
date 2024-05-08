@@ -1,0 +1,25 @@
+
+.main-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.hp-section-1 {
+  flex: 1 1 260px;
+}
+
+.hp-section-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 368px;
+  background-color: var(--almost-white);
+  border: 1px solid var(--light-grey);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.hp-section-alert {
+  padding: 8px;
+}
