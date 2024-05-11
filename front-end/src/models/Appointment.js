@@ -64,7 +64,7 @@ class Appointment {
   }
 
   getDescriptionParagraphs() {
-    return this.description.split('\n');
+    return this.description.split('\n\n');
   }
 }
 

@@ -69,7 +69,7 @@
 .appt-detail-provider-image-div img {
   background-color: var(--light-grey);
   border-radius: 50%;
-  width: 32px;
+  width: 42px;
   object-fit: cover;
   display: block;
 }
@@ -77,4 +77,10 @@
 .appt-detail-provider-name-title small {
   font-size: 75%;
   display: block;
+}
+
+.appt-detail-body {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
 }

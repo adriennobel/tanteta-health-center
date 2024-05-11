@@ -1,13 +1,10 @@
 import { useState } from "react";
+import { TODAY, TODAY_ISODATE } from "../../constants/DateConstants";
 import "./calendar-comp.css"
 
-function CalendarComp({ callBack }) {
-
-  const TODAY = new Date();
-  const TODAY_ISODATE = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate()).toISOString().split('T')[0];
+function CalendarComp({ viewDay, selectedDate }) {
 
   const [counter, setCounter] = useState(0);
-  const [selectedDate, setSelectedDate] = useState(TODAY_ISODATE);
 
   function loadCalendar(counter) {
     // DATE FORMAT USED IN SERVICES: 2024-01-01T09:00.000Z // ALL TIMES STORED IN UTC
@@ -72,11 +69,6 @@ function CalendarComp({ callBack }) {
     const currentMonthStartDate = new Date(TODAY.getFullYear(), TODAY.getMonth() + counter, 1);
     const currentMonthTitle = currentMonthStartDate.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
     return currentMonthTitle
-  }
-
-  function viewDay(ISODATE) {
-    setSelectedDate(ISODATE);
-    callBack(ISODATE);
   }
 
   function nextMonth() {

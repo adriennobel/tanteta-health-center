@@ -47,7 +47,7 @@ function AppointmentDetail({ appointmentData, turnOn, closeModal }) {
             </div>
             <div className="appt-detail-provider-div">
               <div className="appt-detail-provider-image-div">
-                <img src="vite.svg" alt="" />
+                <img src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=42" alt="" />
               </div>
               <div className="appt-detail-provider-name-title">
                 <p>{appointment.doctorName}</p>

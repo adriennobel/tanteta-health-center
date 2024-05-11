@@ -1,41 +1,57 @@
 import express from "express";
+import { MongoClient, ServerApiVersion } from 'mongodb';
 
 const app = express();
 
-app.get("/api/v1/appointments/fetch", (req, res) => {
-  const { date, interval } = req.query;
-  console.log(date);
+const uri = `mongodb+srv://adriennobel:December2020!@cluster0.l5ppxia.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-  const startDate = new Date(date);
-  const endDate = new Date(date);
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+app.get("/api/v1/appointments/fetch", async (req, res) => {
+  const { date, interval } = req.query;
+
+  const startDate = new Date(date + "T00:00");
+  const endDate = new Date(date + "T23:59");
+  let result = [];
 
   if (interval == "DAY") {
     // do something
   } else if (interval == "WEEK") {
-    // manipulate start and end date to be for the current week
+    // startDate = start of the current week (Sunday)
+    startDate.setDate(startDate.getDate() - startDate.getDay());
+    endDate.setDate(startDate.getDate() + 6);
   } else if (interval == "MONTH") {
-    // manipulate start and end date to be for the current month
+    // startDate = first day of the current month
+    startDate.setDate(1);
+    endDate.setMonth(startDate.getMonth() + 1);
+    endDate.setDate(0);
   }
 
-  // call mongoDB find method
-  const mongoResult = [
-    {
-      id: '5486415774187',
-      title: 'Root Canal',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Euismod in pellentesque massa placerat duis ultricies lacus sed. Tellus integer feugiat scelerisque varius morbi.\n\nQuis ipsum suspendisse ultrices gravida dictum fusce ut placerat orci. Mattis aliquam faucibus purus in massa tempor nec feugiat nisl. Morbi enim nunc faucibus a pellentesque. Pretium lectus quam id leo.',
-      start: new Date(),
-      end: new Date(),
-      patientID: '546578475746',
-      doctorID: '45417165461',
-      doctorName: 'Dr. Schwartzoski',
-      doctorSpecialty: 'DENTAL',
-      doctorProfileImageUrl: ''
-    }
-  ];
-
-  res.json(mongoResult);
+  try {
+    await client.connect();
+    result = await client.db("mainDB").collection("appointments").find({
+      start: { $gte: startDate },
+      end: { $lte: endDate }
+    }).toArray();
+    res.json(result);
+  } catch (e) {
+    console.error("Error fetching appointments:", e);
+    res.status(500).send("Error fetching appointments");
+  } finally {
+    await client.close();
+  }
+  //console.log(result);
 });
 
 app.listen(8000, () => {
   console.log("Server is listening on port 8000");
 });
+
+// npx nodemon scr/server.js

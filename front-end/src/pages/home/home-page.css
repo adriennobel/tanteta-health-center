@@ -23,3 +23,7 @@
 .hp-section-alert {
   padding: 8px;
 }
+
+.hp-section-alert span {
+  white-space: nowrap;
+}
