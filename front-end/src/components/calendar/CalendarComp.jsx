@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TODAY, TODAY_ISODATE } from "../../constants/DateConstants";
 import "./calendar-comp.css"
 
-function CalendarComp({ viewDay, selectedDate }) {
+function CalendarComp({ selectedDate, setSelectedDate }) {
 
   const [counter, setCounter] = useState(0);
 
@@ -47,7 +47,7 @@ function CalendarComp({ viewDay, selectedDate }) {
           const TODAYCLASS = ISODATE == TODAY_ISODATE ? " today" : "";
           rowHtml.push(
             <td key={KEY}>
-              <input type="radio" name={"calendar-" + currentMonthISO} id={ISODATE} checked={CHECKED} onChange={() => viewDay(ISODATE)} aria-label={ARIALABEL} className="calendar-number-day-input" />
+              <input type="radio" name={"calendar-" + currentMonthISO} id={ISODATE} checked={CHECKED} onChange={() => setSelectedDate(ISODATE)} aria-label={ARIALABEL} className="calendar-number-day-input" />
               <label htmlFor={ISODATE} title={TITLE} className={"calendar-number-day-label" + TODAYCLASS}>{DAYNUM}</label>
             </td>
           );
@@ -74,24 +74,30 @@ function CalendarComp({ viewDay, selectedDate }) {
   function nextMonth() {
     const firstDateOfNextMonth = new Date(TODAY.getFullYear(), TODAY.getMonth() + 1 + counter, 1);
     setCounter(count => count + 1);
-    viewDay(firstDateOfNextMonth.toISOString().split('T')[0]);
+    setSelectedDate(firstDateOfNextMonth.toISOString().split('T')[0]);
   }
 
   function prevMonth() {
     const firstDateOfPrevMonth = new Date(TODAY.getFullYear(), TODAY.getMonth() - 1 + counter, 1);
     setCounter(count => count - 1);
-    viewDay(firstDateOfPrevMonth.toISOString().split('T')[0]);
+    setSelectedDate(firstDateOfPrevMonth.toISOString().split('T')[0]);
   }
 
   function viewDayOfNextMonth(ISODATE) {
     setCounter(count => count + 1);
-    viewDay(ISODATE);
+    setSelectedDate(ISODATE);
   }
 
   function viewDayOfPrevMonth(ISODATE) {
     setCounter(count => count - 1);
-    viewDay(ISODATE);
+    setSelectedDate(ISODATE);
   }
+
+  useEffect(() => {
+    const selectedMonth = new Date(selectedDate + "T00:00").getMonth();
+    const currentMonth = TODAY.getMonth()
+    setCounter(selectedMonth - currentMonth);
+  }), []
 
   return (
     <>

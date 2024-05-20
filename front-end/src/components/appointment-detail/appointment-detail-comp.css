@@ -79,8 +79,8 @@
   display: block;
 }
 
-.appt-detail-body {
-  display: inline-flex;
-  flex-direction: column;
+.appt-detail-buttons {
+  display: flex;
+  justify-content: flex-end;
   gap: 8px;
 }

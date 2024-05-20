@@ -31,6 +31,7 @@
   overflow: hidden;
   padding: 0;
   position: absolute;
+  border: 0;
 }
 
 .appt-item-button-ada-only:focus {

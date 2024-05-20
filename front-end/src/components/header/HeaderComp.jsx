@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./header-comp.css";
 
 function HeaderComp() {
@@ -6,10 +7,12 @@ function HeaderComp() {
     <header className="page-header">
       <div className="page-header-max-width-div">
         <div className="page-header-logo-div">
-          THC Logo
+          <Link to="/">THC Logo</Link>
         </div>
         <div className="page-header-navigation-div">
-          <button className="main-btn full-width">Schedule a visit</button>
+          <Link to="/schedule-a-visit" className="main-btn primary full-width">
+            Schedule a visit
+          </Link>
           <div>Reports | Profile | Logout</div>
         </div>
       </div>
@@ -17,4 +20,4 @@ function HeaderComp() {
   )
 }
 
-export default HeaderComp
+export default HeaderComp;

@@ -15,6 +15,10 @@ class Doctor extends User {
     super(id, email, password, firstName, lastName, phone, profileImageUrl, role);
     this.specialty = specialty;
   }
+
+  getFullNameWithTitle() {
+    return `Dr. ${this.firstName} ${this.lastName}`;
+  }
 }
 
 export default Doctor;

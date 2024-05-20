@@ -1,9 +1,27 @@
 
-button.main-btn {
-  background-color: var(--accent-color-1);
-  color: white;
+.main-btn {
   border: none;
   border-radius: 8px;
   padding: 8px 16px;
   cursor: pointer;
+  text-decoration: none;
+}
+
+.main-btn.fixed-width {  
+  width: fit-content;
+}
+
+.main-btn.primary {
+  color: white;
+  background-color: var(--accent-color-1);
+}
+
+.main-btn.secondary {
+  color: white;
+  background-color: var(--dark-grey);
+}
+
+.main-btn.fire {
+  color: white;
+  background-color: red;
 }

@@ -5,7 +5,7 @@ function AppointmentComp({ appointmentData, callBack }) {
 
   // Create an instance of Appointment from the raw data
   const appointment = new Appointment(
-    appointmentData.id,
+    appointmentData._id,
     appointmentData.title,
     appointmentData.description,
     appointmentData.start,

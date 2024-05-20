@@ -1,11 +1,12 @@
+import { Link } from "react-router-dom";
 import Appointment from "../../models/Appointment";
 import "./appointment-detail-comp.css";
 
-function AppointmentDetail({ appointmentData, turnOn, closeModal }) {
+function AppointmentDetail({ appointmentData, turnOn, closeModal, deleteEntry }) {
 
   // Create an instance of Appointment from the raw data
   const appointment = new Appointment(
-    appointmentData.id,
+    appointmentData._id,
     appointmentData.title,
     appointmentData.description,
     appointmentData.start,
@@ -55,9 +56,15 @@ function AppointmentDetail({ appointmentData, turnOn, closeModal }) {
               </div>
             </div>
             <div className="appt-detail-body">
-              {description.map((lineText, index) => (
-                <p key={index}>{lineText}</p>
-              ))}
+              <p>
+                {description.map((lineText, index) => (
+                  <span key={index}>{lineText}<br /></span>
+                ))}
+              </p>
+            </div>
+            <div className="appt-detail-buttons">
+              <Link to={"/edit-appointment/" + appointmentData._id} className="main-btn secondary">Edit</Link>
+              <button onClick={() => deleteEntry(appointmentData._id)} className="main-btn fire">Delete</button>
             </div>
           </div>
         </div>
