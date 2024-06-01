@@ -3,8 +3,8 @@ import User from "./User";
 class Patient extends User {
   constructor(
     id = '',
+    uid = '',
     email = '',
-    password = '',
     firstName = '',
     lastName = '',
     phone = '',
@@ -13,7 +13,7 @@ class Patient extends User {
     enrolmentDate = new Date(),
     notes = []
   ) {
-    super(id, email, password, firstName, lastName, phone, profileImageUrl, role);
+    super(id, uid, email, firstName, lastName, phone, profileImageUrl, role);
     this.enrolmentDate = enrolmentDate;
     this.notes = notes;
   }

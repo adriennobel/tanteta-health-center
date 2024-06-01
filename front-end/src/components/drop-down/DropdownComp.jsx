@@ -5,7 +5,7 @@ function DropdownComp({ name, options, selectedOption, setSelectedOption }) {
 
   const [isExpanded, setIsExpanded] = useState(false);
   let expandedClass = isExpanded ? "" : " collapsed";
-  let title = selectedOption?.text ? selectedOption.text :  "Select one";
+  let title = selectedOption?.text ? selectedOption.text : "Select one";
 
   function loadDropDownOptions() {
     // Check if options is undefined or not an array
@@ -26,7 +26,14 @@ function DropdownComp({ name, options, selectedOption, setSelectedOption }) {
       const { value, text } = option;
       return (
         <div key={index} className="dropdown-option-div">
-          <input type="radio" name={"dropdown-" + name} id={`${name}-${index}`} checked={value == selectedOption?.value} onChange={() => setSelectedOption(option)} className="dropdown-option-input" />
+          <input
+            type="radio"
+            name={"dropdown-" + name}
+            id={`${name}-${index}`}
+            checked={value == selectedOption?.value}
+            onChange={() => { setSelectedOption(option), toggleDropdown() }}
+            className="dropdown-option-input"
+          />
           <label htmlFor={`${name}-${index}`} className="dropdown-option-label">{text}</label>
         </div>
       );
@@ -36,7 +43,7 @@ function DropdownComp({ name, options, selectedOption, setSelectedOption }) {
   function toggleDropdown() {
     setIsExpanded(prevState => !prevState);
   }
-  
+
   return (
     <>
       <div className={"dropdown-component" + expandedClass}>

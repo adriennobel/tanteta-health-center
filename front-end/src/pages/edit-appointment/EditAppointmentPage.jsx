@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import useUser from "../../hooks/useUser";
 import DropdownComp from "../../components/drop-down/DropdownComp";
 import CalendarComp from "../../components/calendar/CalendarComp";
 import { SPECIALTY_SERVICES_MAP } from "../../constants/FixedContent";
@@ -10,6 +11,8 @@ import "./edit-appointment-page.css";
 
 function EditAppointmentPage() {
   const cache = {};
+
+  const { user, isLoading } = useUser();
   const { appointmentId } = useParams();
   const navigate = useNavigate();
 
@@ -44,6 +47,10 @@ function EditAppointmentPage() {
   }
 
   async function updateAppointment() {
+    if (new Date(selectedDate + "T00:00") < new Date(TODAY_ISODATE + "T00:00")) {
+      alert("Error creating appointment:\nYou can't book an appointment in the past.");
+      return;
+    }
     try {
       if (appointment.doctorSpecialty == selectedVisitPurposeOption.value &&
         appointment.description == descriptionRef.current.value &&
@@ -59,11 +66,21 @@ function EditAppointmentPage() {
         description: descriptionRef.current.value,
         start: selectedTimeslotOption.value,
         end: "",
-        patientID: "tbd",
+        patientID: user._id,
         doctorID: selectedDoctorOption.value,
         doctorName: selectedDoctorOption.text,
-        doctorSpecialty: selectedVisitPurposeOption.value,
+        doctorSpecialty: selectedVisitPurposeOption.value.split("-")[0],
         doctorProfileImageUrl: "/vite.svg"
+      }
+      const isConfirmed = window.confirm("Confirm details to update appointment!\n\n" +
+        `Visit purpose: ${selectedVisitPurposeOption.text}\n` +
+        `Provider: ${selectedDoctorOption.text}\n` +
+        `Date: ${selectedDate}\n` +
+        `Time: ${selectedTimeslotOption.text}\n` +
+        `Notes: ${descriptionRef.current.value}`
+      );
+      if (!isConfirmed) {
+        return; // Exit the function if the user cancels the confirmation
       }
 
       const response = await axios.put(`/api/v1/appointments/update/${appointmentId}`, {
@@ -77,7 +94,6 @@ function EditAppointmentPage() {
       navigate('/');
     } catch (err) {
       alert("Error updating appointment:\nPlease make sure all selections are made.");
-      console.error("Error updating appointment:", err);
     }
   }
 
@@ -88,7 +104,7 @@ function EditAppointmentPage() {
         const response = await axios.get(`/api/v1/appointments/fetch/${appointmentId}`);
         
         // load form
-        const resVisitPurpose = SPECIALTY_SERVICES_MAP.find(option => option.value == response.data.doctorSpecialty);
+        const resVisitPurpose = SPECIALTY_SERVICES_MAP.find(option => option.text == response.data.title);
         setSelectedVisitPurposeOption(resVisitPurpose);
 
         const resDoctorOption = {
@@ -129,22 +145,24 @@ function EditAppointmentPage() {
 
   useEffect(() => {
     async function fetchDoctors() {
+      if (!selectedVisitPurposeOption) return;
+      const specialty = selectedVisitPurposeOption?.value.split("-")[0];
+
       // Check if the data is already cached
-      if (cache[selectedVisitPurposeOption?.value]) {
-        setDoctorOptions(cache[selectedVisitPurposeOption.value]);
+      if (cache[specialty]) {
+        setDoctorOptions(cache[specialty]);
         setSlectedDoctorOption();
         return;
       }
   
-      if (!selectedVisitPurposeOption) return;
       try {
-        const response = await axios.get(`/api/v1/doctors/fetch/${selectedVisitPurposeOption?.value}`);
+        const response = await axios.get(`/api/v1/doctors/fetch/${specialty}`);
         if (Array.isArray(response.data) & response.data.length > 0) {
           const doctorInstances = response.data.map(doctorData => {
             return new Doctor(
               doctorData._id,
+              doctorData.uid,
               doctorData.email,
-              doctorData.password,
               doctorData.firstName,
               doctorData.lastName,
               doctorData.phone,
@@ -160,11 +178,11 @@ function EditAppointmentPage() {
           setDoctorOptions(newDoctorOptions);
           console.log(newDoctorOptions);
           // Cache the data
-          cache[selectedVisitPurposeOption.value] = newDoctorOptions;
+          cache[specialty] = newDoctorOptions;
         } else {
           setDoctorOptions([]);  
           // Cache the data
-          cache[selectedVisitPurposeOption?.value] = [];
+          cache[specialty] = [];
         }
         !isDoctorLoaded && setSlectedDoctorOption();
         setIsDoctorLoaded(false);
@@ -206,7 +224,6 @@ function EditAppointmentPage() {
   return (
     <>
       <div className="eap-main-view">
-        AppointmentId: {appointmentId}
         <div className="savp-question-div">
           <div className="savp-question-title">Purpose of visit</div>
           <DropdownComp

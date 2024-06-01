@@ -1,0 +1,11 @@
+.page-body-without-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.page-body-without-header .page-main-max-width-div {
+  max-width: 380px;
+  padding: 16px;
+}

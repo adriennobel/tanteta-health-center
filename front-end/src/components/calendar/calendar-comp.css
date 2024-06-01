@@ -2,7 +2,7 @@
 .calendar-component {
   border-radius: 8px;
   border: 1px solid var(--light-grey);
-  background-color: var(--almost-white);
+  background-color: var(--not-white);
   color: var(--dark-grey);
 }
 
@@ -23,6 +23,7 @@
   border-radius: 4px;
   border: 0;
   padding: 2px 16px;
+  background-color: var(--not-white);
 }
 
 .calendar-navigation button:hover {

@@ -1,7 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth"
 import "./header-comp.css";
 
 function HeaderComp() {
+  const navigate = useNavigate();
+
+  async function logOut() {
+    try {
+      await signOut(getAuth());
+      navigate("/login");
+    } catch (e) {
+      console.error(e);
+      alert("Error signing out.\nOur engineers are working to fix this.");
+    }
+  }
 
   return (
     <header className="page-header">
@@ -9,12 +21,19 @@ function HeaderComp() {
         <div className="page-header-logo-div">
           <Link to="/">THC Logo</Link>
         </div>
-        <div className="page-header-navigation-div">
-          <Link to="/schedule-a-visit" className="main-btn primary full-width">
-            Schedule a visit
-          </Link>
-          <div>Reports | Profile | Logout</div>
-        </div>
+        <nav>
+          <div className="page-header-navigation-div">
+            <Link to="/schedule-a-visit" className="main-btn primary full-width">
+              Schedule a visit
+            </Link>
+            <Link to="/reports" className="main-btn secondary full-width">
+              Reports
+            </Link>
+            <button onClick={logOut} className="main-btn fire full-width">
+              Sign out
+            </button>
+          </div>
+        </nav>
       </div>
     </header>
   )

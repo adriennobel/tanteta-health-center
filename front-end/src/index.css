@@ -24,3 +24,7 @@ body {
   background-color: var(--lightest-grey);
   color: var(--dark-grey);
 }
+
+a {
+  color: var(--accent-color-1);
+}

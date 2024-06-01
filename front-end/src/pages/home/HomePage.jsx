@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useUser from "../../hooks/useUser";
 import CalendarComp from "../../components/calendar/CalendarComp";
 import DropdownComp from "../../components/drop-down/DropdownComp";
 import AppointmentComp from "../../components/appointment/AppointmentComp";
@@ -9,7 +10,7 @@ import { APPT_VIEW_INTERVALS } from "../../constants/FixedContent";
 import "./home-page.css";
 
 function HomePage() {
-
+	const { user, isLoading } = useUser();
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(<>No appointments found</>);
 	const [selectedDate, setSelectedDate] = useState(TODAY_ISODATE);
@@ -64,16 +65,17 @@ function HomePage() {
 				const response = await axios.get("/api/v1/appointments/fetch", {
 					params: {
 						date: selectedDate,
-						interval: selectedInterval.value
+						interval: selectedInterval.value,
+						_id: user._id
 					}
 				});
 				if (Array.isArray(response.data) & response.data.length > 0) {
 					setAppointments(response.data);
-					console.log(response.data);
 					setError(<></>);
 				} else if (Array.isArray(response.data) & response.data.length == 0) {
 					setAppointments([]);
-					setError(<>No appointments found for <span>{selectedDateString}</span></>);
+					const dateDisplay = selectedDate == TODAY_ISODATE ? "today" : selectedDateString
+					setError(<>No appointments found for <span>{dateDisplay}</span></>);
 				} else {
 					setAppointments([]);
 					setError(<>Error fetching appointments</>);
@@ -85,10 +87,13 @@ function HomePage() {
 			setLoading(false);
 		}
 		fetchAppointments();
-	}, [selectedDate, selectedInterval])
+	}, [selectedDate, selectedInterval, isLoading])
 
 	return (
 		<>
+		<div className="hp-header">
+			<h2>Welcome, {user?.firstName || "..."}</h2>
+		</div>
 			<div className="hp-main-view">
 				<section className="hp-section-1">
 					<CalendarComp selectedDate={selectedDate} setSelectedDate={handleDateChange} />

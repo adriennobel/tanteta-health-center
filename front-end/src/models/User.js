@@ -2,8 +2,8 @@
 class User {
   constructor(
     id,
+    uid,
     email,
-    password,
     firstName,
     lastName,
     phone,
@@ -11,8 +11,8 @@ class User {
     role
   ) {
     this.id = id;
+    this.uid = uid,
     this.email = email;
-    this.password = password;
     this.firstName = firstName;
     this.lastName = lastName;
     this.phone = phone;

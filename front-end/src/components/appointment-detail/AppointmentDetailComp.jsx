@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Appointment from "../../models/Appointment";
+import { DOCTOR_TITLE_MAP } from "../../constants/FixedContent";
 import "./appointment-detail-comp.css";
 
 function AppointmentDetail({ appointmentData, turnOn, closeModal, deleteEntry }) {
@@ -52,7 +53,7 @@ function AppointmentDetail({ appointmentData, turnOn, closeModal, deleteEntry })
               </div>
               <div className="appt-detail-provider-name-title">
                 <p>{appointment.doctorName}</p>
-                <small>{appointment.doctorSpecialty}</small>
+                <small>{DOCTOR_TITLE_MAP[appointment.doctorSpecialty] || "Physician"}</small>
               </div>
             </div>
             <div className="appt-detail-body">

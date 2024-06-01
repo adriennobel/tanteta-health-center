@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import useUser from "../../hooks/useUser";
 import DropdownComp from "../../components/drop-down/DropdownComp";
 import CalendarComp from "../../components/calendar/CalendarComp";
 import { SPECIALTY_SERVICES_MAP } from "../../constants/FixedContent";
@@ -7,9 +8,9 @@ import { TODAY_ISODATE } from "../../constants/DateConstants";
 import Doctor from "../../models/Doctor";
 import "./schedule-a-visit-page.css";
 
-const cache = {};
-
 function ScheduleAVisitPage() {
+  const cache = {};
+  const { user, isLoading } = useUser();
 
   const [selectedVisitPurposeOption, setSelectedVisitPurposeOption] = useState();
   const [doctorOptions, setDoctorOptions] = useState([]);
@@ -38,50 +39,65 @@ function ScheduleAVisitPage() {
   }
 
   async function createAppointment() {
+    if (new Date(selectedDate + "T00:00") < new Date(TODAY_ISODATE + "T00:00")) {
+      alert("Error creating appointment:\nYou can't book an appointment in the past.");
+      return;
+    }
     try {
       const appointment = {
         title: selectedVisitPurposeOption.text,
         description: descriptionRef.current.value,
         start: selectedTimeslotOption.value,
         end: "",
-        patientID: "tbd",
+        patientID: user._id,
         doctorID: selectedDoctorOption.value,
         doctorName: selectedDoctorOption.text,
-        doctorSpecialty: selectedVisitPurposeOption.value,
+        doctorSpecialty: selectedVisitPurposeOption.value.split("-")[0],
         doctorProfileImageUrl: "/vite.svg"
+      };
+      const isConfirmed = window.confirm("Confirm details to create appointment!\n\n" +
+        `Visit purpose: ${selectedVisitPurposeOption.text}\n` +
+        `Provider: ${selectedDoctorOption.text}\n` +
+        `Date: ${selectedDate}\n` +
+        `Time: ${selectedTimeslotOption.text}\n` +
+        `Notes: ${descriptionRef.current.value}`
+      );
+      if (!isConfirmed) {
+        return; // Exit the function if the user cancels the confirmation
       }
+
       const response = await axios.post("/api/v1/appointments/create", { appointment });
       if (response.status === 200) {
         alert("Appointment created successfully");
         window.location.reload();
       } else {
         alert("Failed to create appointment:\nOur engineers are working to restore the connection. Please try again later.");
-        console.error("Failed to create appointment");
       }
     } catch (err) {
       alert("Error creating appointment:\nPlease make sure all selections are made.");
-      console.error("Error creating appointment:", err);
     }
   }
 
   useEffect(() => {
     async function fetchDoctors() {
+      if (!selectedVisitPurposeOption) return;
+      const specialty = selectedVisitPurposeOption?.value.split("-")[0];
+      
       // Check if the data is already cached
-      if (cache[selectedVisitPurposeOption?.value]) {
-        setDoctorOptions(cache[selectedVisitPurposeOption.value]);
+      if (cache[specialty]) {
+        setDoctorOptions(cache[specialty]);
         setSlectedDoctorOption();
         return;
       }
 
-      if (!selectedVisitPurposeOption) return;
       try {
-        const response = await axios.get(`/api/v1/doctors/fetch/${selectedVisitPurposeOption?.value}`);
+        const response = await axios.get(`/api/v1/doctors/fetch/${specialty}`);
         if (Array.isArray(response.data) & response.data.length > 0) {
           const doctorInstances = response.data.map(doctorData => {
             return new Doctor(
               doctorData._id,
+              doctorData.uid,
               doctorData.email,
-              doctorData.password,
               doctorData.firstName,
               doctorData.lastName,
               doctorData.phone,
@@ -97,12 +113,12 @@ function ScheduleAVisitPage() {
           setDoctorOptions(newDoctorOptions);
 
           // Cache the data
-          cache[selectedVisitPurposeOption.value] = newDoctorOptions;
+          cache[specialty] = newDoctorOptions;
         } else {
           setDoctorOptions([]);
 
           // Cache the data
-          cache[selectedVisitPurposeOption?.value] = [];
+          cache[specialty] = [];
         }
         setSlectedDoctorOption();
       } catch (err) {

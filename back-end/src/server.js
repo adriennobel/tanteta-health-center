@@ -6,29 +6,50 @@ const app = express();
 app.use(express.json());
 
 app.get("/api/v1/appointments/fetch", async (req, res) => {
-  const { date, interval } = req.query;
+  const { date, interval, _id } = req.query;
 
   const startDate = new Date(date + "T00:00");
   const endDate = new Date(date + "T23:59");
+  const patientID = new ObjectId(_id);
 
-  if (interval == "DAY") {
-    // do something
-  } else if (interval == "WEEK") {
-    // startDate = start of the current week (Sunday)
-    startDate.setDate(startDate.getDate() - startDate.getDay());
-    endDate.setDate(startDate.getDate() + 6);
-  } else if (interval == "MONTH") {
-    // startDate = first day of the current month
-    startDate.setDate(1);
-    endDate.setMonth(startDate.getMonth() + 1);
-    endDate.setDate(0);
+  try {
+
+    if (interval == "DAY") {
+      // do something
+    } else if (interval == "WEEK") {
+      // startDate = start of the current week (Sunday)
+      startDate.setDate(startDate.getDate() - startDate.getDay());
+      endDate.setDate(startDate.getDate() + 6);
+    } else if (interval == "MONTH") {
+      // startDate = first day of the current month
+      startDate.setDate(1);
+      endDate.setMonth(startDate.getMonth() + 1);
+      endDate.setDate(0);
+    }
+
+    const client = await clientPromise;
+    const result = await client.db("mainDB").collection("appointments").find({
+      start: { $gte: startDate },
+      end: { $lte: endDate },
+      patientID: patientID
+    }).sort({
+      start: 1
+    }).toArray();
+    res.json(result);
+  } catch (e) {
+    console.error("Error fetching appointments:", e);
+    res.status(500).send("Error fetching appointments");
   }
+});
+
+app.get("/api/v1/appointments/fetchall", async (req, res) => {
+  const { _id } = req.query;
+  const patientID = new ObjectId(_id);
 
   try {
     const client = await clientPromise;
     const result = await client.db("mainDB").collection("appointments").find({
-      start: { $gte: startDate },
-      end: { $lte: endDate }
+      patientID: patientID
     }).sort({
       start: 1
     }).toArray();
@@ -118,10 +139,6 @@ app.post("/api/v1/doctors/availability", async (req, res) => {
 app.post("/api/v1/appointments/create", async (req, res) => {
   const { appointment } = req.body;
 
-  // Convert doctorID to ObjectId
-  if (appointment.doctorID) {
-    appointment.doctorID = new ObjectId(appointment.doctorID);
-  }
   // Convert start and end times to Date objects
   if (appointment.start) {
     const start = new Date(appointment.start);
@@ -130,6 +147,10 @@ app.post("/api/v1/appointments/create", async (req, res) => {
   }
 
   try {
+    // Convert doctorID to ObjectId
+    appointment.doctorID = new ObjectId(appointment.doctorID);
+    appointment.patientID = new ObjectId(appointment.patientID);
+
     const client = await clientPromise;
     const result = await client.db("mainDB").collection("appointments").insertOne(appointment);
 
@@ -139,8 +160,8 @@ app.post("/api/v1/appointments/create", async (req, res) => {
       res.status(500).send("Failed to create appointment");
     }
   } catch (e) {
-    console.error("Error fetching appointments:", e);
-    res.status(500).send("Error fetching appointments");
+    console.error("Error creating appointment:", e);
+    res.status(500).send("Error creating appointment");
   }
 });
 
@@ -148,15 +169,16 @@ app.put("/api/v1/appointments/update/:id", async (req, res) => {
   const { id } = req.params;
   const { updatedAppointment } = req.body;
 
-  // Convert doctorID to ObjectId
-  updatedAppointment.doctorID = new ObjectId(updatedAppointment.doctorID);
-
-  // Convert start and end times to Date objects
-  const start = new Date(updatedAppointment.start);
-  updatedAppointment.start = new Date(updatedAppointment.start);
-  updatedAppointment.end = new Date(start.setHours(start.getHours() + 1));
-
   try {
+    // Convert doctorID to ObjectId
+    updatedAppointment.doctorID = new ObjectId(updatedAppointment.doctorID);
+    updatedAppointment.patientID = new ObjectId(updatedAppointment.patientID);
+
+    // Convert start and end times to Date objects
+    const start = new Date(updatedAppointment.start);
+    updatedAppointment.start = new Date(updatedAppointment.start);
+    updatedAppointment.end = new Date(start.setHours(start.getHours() + 1));
+
     const client = await clientPromise;
     const result = await client.db("mainDB").collection("appointments").updateOne(
       { _id: new ObjectId(id) },
@@ -179,8 +201,8 @@ app.delete("/api/v1/appointments/delete/:id", async (req, res) => {
 
   try {
     const client = await clientPromise;
-    const result = await client.db("mainDB").collection("appointments").deleteOne({ 
-      _id: new ObjectId(id) 
+    const result = await client.db("mainDB").collection("appointments").deleteOne({
+      _id: new ObjectId(id)
     });
 
     if (result.acknowledged) {
@@ -191,6 +213,47 @@ app.delete("/api/v1/appointments/delete/:id", async (req, res) => {
   } catch (e) {
     console.error("Error deleting appointment:", e);
     res.status(500).send("Error deleting appointment");
+  }
+});
+
+app.post("/api/v1/patients/create", async (req, res) => {
+  try {
+    const { patient } = req.body;
+    patient.enrolmentDate = new Date();
+
+    const client = await clientPromise;
+    const result = await client.db("mainDB").collection("users").insertOne(patient);
+
+    if (result.acknowledged) {
+      res.status(200).send("User created successfully");
+    } else {
+      res.status(500).send("Failed to create user");
+    }
+  } catch (e) {
+    console.error("Error creating user:", e);
+    res.status(500).send("Error creating user");
+  }
+});
+
+app.get("/api/v1/patients/fetch/:uid", async (req, res) => {
+  try {
+    const { uid } = req.params;
+
+    if (!uid) res.status(404);
+
+    const client = await clientPromise;
+    const result = await client.db("mainDB").collection("users").findOne({
+      uid: uid
+    });
+
+    if (result) {
+      res.status(200).json(result);
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (e) {
+    console.error("Error creating user:", e);
+    res.status(500).send("Error creating user");
   }
 });
 

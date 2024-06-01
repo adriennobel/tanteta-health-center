@@ -17,5 +17,5 @@ header.page-header {
 .page-header-navigation-div {
   display: flex;
   gap: 16px;
-  align-items: center;
+  align-items: stretch;
 }

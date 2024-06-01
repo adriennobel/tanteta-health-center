@@ -3,8 +3,8 @@ import User from "./User";
 class Doctor extends User {
   constructor(
     id = '',
+    uid = '',
     email = '',
-    password = '',
     firstName = '',
     lastName = '',
     phone = '',
@@ -12,7 +12,7 @@ class Doctor extends User {
     role = 'DOCTOR',
     specialty = ''
   ) {
-    super(id, email, password, firstName, lastName, phone, profileImageUrl, role);
+    super(id, uid, email, firstName, lastName, phone, profileImageUrl, role);
     this.specialty = specialty;
   }
 

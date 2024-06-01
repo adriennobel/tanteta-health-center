@@ -31,12 +31,16 @@ class Appointment {
 
   getFormattedDate() {
     try {
-      return this.start.toLocaleDateString(undefined, {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      });
+      if (arguments.length === 0) {
+        return this.start.toLocaleDateString(undefined, {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        });
+      } else {
+        if (arguments[0] === "M/D/YYYY") return this.start.toLocaleDateString();
+      }
     } catch (error) {
       return 'Error getting date';
     }
@@ -49,8 +53,11 @@ class Appointment {
         minute: 'numeric',
         hour12: true,
       });
-
-      return `${timeFormatter.format(this.start)} - ${timeFormatter.format(this.end)}`;
+      if (arguments.length === 0) {
+        return `${timeFormatter.format(this.start)} - ${timeFormatter.format(this.end)}`;
+      } else {
+        if (arguments[0] === "start") return timeFormatter.format(this.start);
+      }
     } catch (error) {
       return 'Error getting time';
     }

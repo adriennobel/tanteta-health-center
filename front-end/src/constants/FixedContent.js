@@ -15,13 +15,39 @@ const APPT_VIEW_INTERVALS = [
 
 const SPECIALTY_SERVICES_MAP = [
   {
-    value: "DENTISTRY",
-    text: "Root Canal"
+    value: "DENTISTRY-1",
+    text: "Root canal"
   },
   {
-    value: "FAMILY_MEDICINE",
+    value: "DENTISTRY-2",
+    text: "Dental cleanse"
+  },
+  {
+    value: "DENTISTRY-3",
+    text: "Orthodontics"
+  },
+  {
+    value: "VISION-1",
+    text: "Eye exam"
+  },
+  {
+    value: "VISION-2",
+    text: "Glaucoma evaluation"
+  },
+  {
+    value: "FAMILY_MEDICINE-1",
     text: "Physical check-up"
+  },
+  {
+    value: "FAMILY_MEDICINE-2",
+    text: "Urgent care"
   }
-]
+];
 
-export { APPT_VIEW_INTERVALS, SPECIALTY_SERVICES_MAP }
+const DOCTOR_TITLE_MAP = {
+  DENTISTRY: "Dentist",
+  VISION: "Ophthalmologist",
+  FAMILY_MEDICINE: "Physician"
+};
+
+export { APPT_VIEW_INTERVALS, SPECIALTY_SERVICES_MAP, DOCTOR_TITLE_MAP }

@@ -25,3 +25,12 @@
   color: white;
   background-color: red;
 }
+
+.main-btn:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.main-btn:disabled {
+  cursor: not-allowed;
+  background-color: var(--light-grey);
+}

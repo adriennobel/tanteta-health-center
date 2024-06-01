@@ -1,0 +1,43 @@
+.rp-main-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rp-search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rp-search-input {
+  border: 1px solid var(--light-grey);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.search-results-table {
+  width: calc(100vw - 64px);
+  max-width: 1024px;
+  overflow: auto;
+}
+
+table.default-table {
+  border: 1px solid var(--light-grey);
+  background-color: var(--not-white);
+  border-collapse: collapse;
+}
+
+table.scroll-in-parent {
+  min-width: 610px;
+}
+
+.default-table tbody tr:nth-child(odd) {
+  background-color: var(--lightest-grey);
+}
+
+.default-table td, .default-table th {
+  border: 1px solid var(--light-grey);
+  padding: 2px 4px;
+  text-align: left;
+}

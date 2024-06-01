@@ -1,0 +1,36 @@
+
+.centered-login-div {
+  border: 1px solid var(--light-grey);
+  border-radius: 8px;
+  padding: 32px 16px;
+  background-color: var(--not-white);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.login-header-div h2 {
+  font-size: 24px;
+}
+
+.login-error-div {
+  border: 1px solid red;
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: red;
+  background-color: rgba(255, 145, 145, .1);
+}
+
+.login-inputs-div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-input-div input {
+  border: 1px solid var(--light-grey);
+  border-radius: 8px;
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
