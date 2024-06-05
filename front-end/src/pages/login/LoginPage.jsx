@@ -14,6 +14,12 @@ function LoginPage() {
     try {
       const emailValue = emailRef.current.value;
       const passwordValue = passwordRef.current.value;
+
+      if (!emailValue.match(/^\S+@\S+\.\S+$/)) {
+        setError("Please enter a valid email");
+        return;
+      }
+
       await signInWithEmailAndPassword(getAuth(), emailValue, passwordValue);
       navigate("/");
     } catch (e) {

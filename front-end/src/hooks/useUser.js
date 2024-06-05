@@ -15,7 +15,7 @@ function useUser() {
           setUser(response.data);
         }
       } catch (e) {
-        alert("Error getting user info.\nOur engineers are working to fix this.");
+        alert("Error getting user info.\nPlease try again.");
       }
     }
 
