@@ -19,7 +19,7 @@ function HeaderComp() {
     <header className="page-header">
       <div className="page-header-max-width-div">
         <div className="page-header-logo-div">
-          <Link to="/">THC Logo</Link>
+          <Link to="/">THC</Link>
         </div>
         <nav>
           <div className="page-header-navigation-div">

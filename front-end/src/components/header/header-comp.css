@@ -19,3 +19,8 @@ header.page-header {
   gap: 16px;
   align-items: stretch;
 }
+
+.page-header-logo-div a {
+  font-weight: 700;
+  font-size: 32px;
+}

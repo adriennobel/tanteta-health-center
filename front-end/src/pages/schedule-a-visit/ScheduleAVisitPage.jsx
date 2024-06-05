@@ -8,8 +8,9 @@ import { TODAY_ISODATE } from "../../constants/DateConstants";
 import Doctor from "../../models/Doctor";
 import "./schedule-a-visit-page.css";
 
+const cache = {};
+
 function ScheduleAVisitPage() {
-  const cache = {};
   const { user, isLoading } = useUser();
 
   const [selectedVisitPurposeOption, setSelectedVisitPurposeOption] = useState();

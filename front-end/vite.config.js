@@ -12,5 +12,9 @@ export default defineConfig({
         rewrite: (path) => path,
       },
     },
+    test: {
+      globals: true,
+      environment: "jsdom",
+    },
   },
 })

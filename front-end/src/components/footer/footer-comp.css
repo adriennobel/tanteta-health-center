@@ -8,6 +8,7 @@ footer.page-footer {
 .footer-max-width-div {
   flex: 0 1 1024px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   padding: 8px 0;
   border-top: 1px solid var(--light-grey);

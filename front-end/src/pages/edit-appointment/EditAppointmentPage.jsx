@@ -9,9 +9,9 @@ import { TODAY_ISODATE } from "../../constants/DateConstants";
 import Doctor from "../../models/Doctor";
 import "./edit-appointment-page.css";
 
-function EditAppointmentPage() {
-  const cache = {};
+const cache = {};
 
+function EditAppointmentPage() {
   const { user, isLoading } = useUser();
   const { appointmentId } = useParams();
   const navigate = useNavigate();
@@ -176,11 +176,12 @@ function EditAppointmentPage() {
             text: doctor.getFullNameWithTitle()
           }));
           setDoctorOptions(newDoctorOptions);
-          console.log(newDoctorOptions);
+
           // Cache the data
           cache[specialty] = newDoctorOptions;
         } else {
-          setDoctorOptions([]);  
+          setDoctorOptions([]);
+
           // Cache the data
           cache[specialty] = [];
         }

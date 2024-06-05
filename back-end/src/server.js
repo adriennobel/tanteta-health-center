@@ -19,7 +19,7 @@ app.get("/api/v1/appointments/fetch", async (req, res) => {
     } else if (interval == "WEEK") {
       // startDate = start of the current week (Sunday)
       startDate.setDate(startDate.getDate() - startDate.getDay());
-      endDate.setDate(startDate.getDate() + 6);
+      endDate.setDate(endDate.getDate() + 6 - endDate.getDay());
     } else if (interval == "MONTH") {
       // startDate = first day of the current month
       startDate.setDate(1);

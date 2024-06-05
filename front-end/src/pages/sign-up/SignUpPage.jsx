@@ -26,17 +26,26 @@ function SignUpPage() {
       const password2Value = password2Ref.current.value;
 
       if (!fnameValue) {
-        setError("Please enter a first name");
+        setError("First name is required.");
+        setLoading(false);
         return;
       }
 
       if (!emailValue.match(/^\S+@\S+\.\S+$/)) {
         setError("Please enter a valid email");
+        setLoading(false);
+        return;
+      }
+
+      if (!passwordValue) {
+        setError("Password can not be empty.");
+        setLoading(false);
         return;
       }
 
       if (passwordValue != password2Value) {
         setError("Confirm password does not match");
+        setLoading(false);
         return;
       }
 
