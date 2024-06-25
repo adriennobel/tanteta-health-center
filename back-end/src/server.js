@@ -1,9 +1,19 @@
+import { fileURLToPath } from "url";
+import path from "path";
 import express from "express";
-import clientPromise from "./db.js";
 import { ObjectId } from 'mongodb';
+import { db, connectToDB } from "./db.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../dist")));
+
+app.get(/^(?!\/api).+/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
 
 app.get("/api/v1/appointments/fetch", async (req, res) => {
   const { date, interval, _id } = req.query;
@@ -27,8 +37,7 @@ app.get("/api/v1/appointments/fetch", async (req, res) => {
       endDate.setDate(0);
     }
 
-    const client = await clientPromise;
-    const result = await client.db("mainDB").collection("appointments").find({
+    const result = await db.collection("appointments").find({
       start: { $gte: startDate },
       end: { $lte: endDate },
       patientID: patientID
@@ -47,8 +56,7 @@ app.get("/api/v1/appointments/fetchall", async (req, res) => {
   const patientID = new ObjectId(_id);
 
   try {
-    const client = await clientPromise;
-    const result = await client.db("mainDB").collection("appointments").find({
+    const result = await db.collection("appointments").find({
       patientID: patientID
     }).sort({
       start: 1
@@ -64,8 +72,7 @@ app.get("/api/v1/appointments/fetch/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const client = await clientPromise;
-    const result = await client.db("mainDB").collection("appointments").findOne({
+    const result = await db.collection("appointments").findOne({
       _id: new ObjectId(id)
     });
 
@@ -85,8 +92,7 @@ app.get("/api/v1/doctors/fetch/:specialty", async (req, res) => {
 
   try {
     if (specialty != "undefined") {
-      const client = await clientPromise;
-      const result = await client.db("mainDB").collection("doctors").find({
+      const result = await db.collection("doctors").find({
         specialty: specialty
       }).toArray();
       res.json(result)
@@ -106,9 +112,8 @@ app.post("/api/v1/doctors/availability", async (req, res) => {
   const endDate = new Date(date + "T23:59");
 
   try {
-    const client = await clientPromise;
     // Retrieve the doctor's existing appointments for the specified date
-    const result = await client.db("mainDB").collection("appointments").find({
+    const result = await db.collection("appointments").find({
       doctorID: new ObjectId(doctorId),
       start: { $gte: startDate },
       end: { $lte: endDate }
@@ -151,8 +156,7 @@ app.post("/api/v1/appointments/create", async (req, res) => {
     appointment.doctorID = new ObjectId(appointment.doctorID);
     appointment.patientID = new ObjectId(appointment.patientID);
 
-    const client = await clientPromise;
-    const result = await client.db("mainDB").collection("appointments").insertOne(appointment);
+    const result = await db.collection("appointments").insertOne(appointment);
 
     if (result.acknowledged) {
       res.status(200).send("Appointment created successfully");
@@ -179,8 +183,7 @@ app.put("/api/v1/appointments/update/:id", async (req, res) => {
     updatedAppointment.start = new Date(updatedAppointment.start);
     updatedAppointment.end = new Date(start.setHours(start.getHours() + 1));
 
-    const client = await clientPromise;
-    const result = await client.db("mainDB").collection("appointments").updateOne(
+    const result = await db.collection("appointments").updateOne(
       { _id: new ObjectId(id) },
       { $set: updatedAppointment }
     );
@@ -200,8 +203,7 @@ app.delete("/api/v1/appointments/delete/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const client = await clientPromise;
-    const result = await client.db("mainDB").collection("appointments").deleteOne({
+    const result = await db.collection("appointments").deleteOne({
       _id: new ObjectId(id)
     });
 
@@ -221,8 +223,7 @@ app.post("/api/v1/patients/create", async (req, res) => {
     const { patient } = req.body;
     patient.enrolmentDate = new Date();
 
-    const client = await clientPromise;
-    const result = await client.db("mainDB").collection("users").insertOne(patient);
+    const result = await db.collection("users").insertOne(patient);
 
     if (result.acknowledged) {
       res.status(200).send("User created successfully");
@@ -241,8 +242,7 @@ app.get("/api/v1/patients/fetch/:uid", async (req, res) => {
 
     if (!uid) res.status(404);
 
-    const client = await clientPromise;
-    const result = await client.db("mainDB").collection("users").findOne({
+    const result = await db.collection("users").findOne({
       uid: uid
     });
 
@@ -257,8 +257,13 @@ app.get("/api/v1/patients/fetch/:uid", async (req, res) => {
   }
 });
 
-app.listen(8000, () => {
-  console.log("Server is listening on port 8000");
-});
+const PORT = process.env.PORT || 8000;
+
+connectToDB(() => {
+  console.log("DB connection successful.")
+  app.listen(PORT, () => {
+    console.log("Server is listening on port " + PORT);
+  });
+})
 
 // npx nodemon scr/server.js

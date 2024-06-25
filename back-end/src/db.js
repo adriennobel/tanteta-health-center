@@ -3,19 +3,19 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-let client;
-let clientPromise;
+let db;
 
-if (!client) {
-  // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-  client = new MongoClient(process.env.URI, {
+async function connectToDB(callback) {
+  const client = new MongoClient(process.env.URI, {
     serverApi: {
       version: ServerApiVersion.v1,
       strict: true,
       deprecationErrors: true,
     }
   });
-  clientPromise = client.connect();
+  await client.connect();
+  db = client.db("mainDB");
+  callback();
 }
 
-export default clientPromise;
+export { db, connectToDB };
