@@ -1,29 +1,76 @@
-<strong>**DO NOT DISTRIBUTE OR PUBLICLY POST SOLUTIONS TO THESE LABS. MAKE ALL FORKS OF THIS REPOSITORY WITH SOLUTION CODE PRIVATE. PLEASE REFER TO THE STUDENT CODE OF CONDUCT AND ETHICAL EXPECTATIONS FOR COLLEGE OF INFORMATION TECHNOLOGY STUDENTS FOR SPECIFICS. **</strong>
+# Tanteta Health Center Appointment App
 
-# WESTERN GOVERNOR UNIVERSITY 
-## D424 – SOFTWARE ENGINEERING CAPSTONE
-Welcome to Software Engineering Capstone! This is an opportunity for students to develop full stack software engineering documentation and applications. They will execute documentation, unit testing, revision of software applications, and deploy software applications with scripts and containers on a cloud platform.
+## Overview
 
-FOR SPECIFIC TASK INSTRUCTIONS AND REQUIREMENTS FOR THIS ASSESSMENT, PLEASE REFER TO THE COURSE PAGE.
-BASIC INSTRUCTIONS
-For this assessment, you will deploy your developed full stack software product to a web service of your choice.
+The Tanteta Health Center Appointment App is designed to facilitate the scheduling of appointments between patients and doctors. Patients can create an account, log in, and book appointments with available doctors. Each doctor has a specialty and set availability, making it easy for patients to find the right doctor for their needs.
 
+## Features
 
-## SUPPLEMENTAL RESOURCES  
-1.	How to clone a project to IntelliJ using Git?
+- User Authentication: Patients can sign up and log in.
+- Appointment Scheduling: Book, view, and manage appointments.
+- Doctor Specialties: Filter doctors by their specialties.
+- User Profile: View and update user information.
+- Reports: Generate reports of scheduled appointments.
 
-> Ensure that you have Git installed on your system and that IntelliJ is installed using [Toolbox](https://www.jetbrains.com/toolbox-app/). Make sure that you are using version 2022.3.2. Once this has been confirmed, click the clone button and use the 'IntelliJ IDEA (HTTPS)' button. This will open IntelliJ with a prompt to clone the proejct. Save it in a safe location for the directory and press clone. IntelliJ will prompt you for your credentials. Enter in your WGU Credentials and the project will be cloned onto your local machine.  
+## Prerequisites
 
-2. How to create a branch and start Development?
+Before running the application, ensure you have the following installed:
 
-- GitLab method
-> Press the '+' button located near your branch name. In the dropdown list, press the 'New branch' button. This will allow you to create a name for your branch. Once the branch has been named, you can select 'Create Branch' to push the branch to your repository.
+- Node.js (version 14 or higher)
+- npm (Node Package Manager)
 
-- IntelliJ method
-> In IntelliJ, Go to the 'Git' button on the top toolbar. Select the new branch option and create a name for the branch. Make sure checkout branch is selected and press create. You can now add a commit message and push the new branch to the local repo.
+You will also need to set up a MongoDB database:
 
-## SUPPORT
-If you need additional support, please navigate to the course page and reach out to your course instructor.
+1. Create a free tier account on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register).
+2. Set up a cluster and create a new database named `mainDB`.
+3. Obtain the MongoDB URI connection string for your `.env` file.
 
-## FUTURE USE
-Take this opportunity to create or add to a simple resume portfolio to highlight and showcase your work for future use in career search, experience, and education!
+## Installation
+
+Follow these steps to run the application locally:
+
+1. **Clone the Repository**
+  ```bash
+  git clone https://github.com/your-repo/tanteta-health-center-app.git
+  cd tanteta-health-center-app
+  ```
+
+2. **Install Dependencies**
+  ```bash
+  npm install
+  ```
+
+3. **Set Up Environment Variables**
+- Create a .env file in the back-end directory of the project and add the required environment variables like your mongoDB URI:
+  ```env
+  URI=your_mongodb_uri
+  ```
+
+4. **Run the Application**
+- Start the application in development mode:
+  ```bash
+  npm run host
+  ```
+- Open your browser and navigate to http://localhost:5173 to view the application.
+
+## Usage
+### Logging In
+- Open the application and click the "Log in" button in the top right corner.
+- Enter your email and password to log in.
+### Signing Up
+- On the login page, click on the link that says “Need an account?”.
+- Fill in the required fields (email, password, first name, last name, phone number) and click "Sign Up".
+### Scheduling a Visit
+- Click on the “Schedule a Visit” tab.
+- Select a doctor and choose an available date and time slot.
+- Click “Confirm” to schedule your visit.
+- Viewing and Managing Appointments
+- View your scheduled appointments on the main landing page.
+- Click on an appointment to see details or to edit/cancel it.
+### Generating Reports
+- Navigate to the “Reports” tab from the main landing page.
+- Select the date range and type of report you want to generate.
+- Click “Generate Report” to view the report.
+
+## Contributing
+Contributions are welcome! Please fork the repository and submit pull requests.
