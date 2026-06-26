@@ -16,8 +16,8 @@ COPY back-end/package*.json ./
 RUN npm install
 COPY back-end/ .
 
-# Copy frontend build into backend public folder
-COPY --from=frontend /app/frontend/dist ./public
+# Copy frontend build into backend /dist
+COPY --from=frontend /app/frontend/dist ./dist
 
 EXPOSE 8000
 ENV PORT=8000
