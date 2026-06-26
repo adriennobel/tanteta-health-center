@@ -1,23 +1,25 @@
-# Use an official Node runtime as a parent image
-FROM node:20
+# ---------- FRONTEND BUILD ----------
+FROM node:20 AS frontend
 
-# Set the working directory to /usr/src/app
-WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json
-COPY back-end/package*.json ./
-
-# Install any needed packages specified in package.json
+WORKDIR /app/frontend
+COPY front-end/package*.json ./
 RUN npm install
+COPY front-end/ .
+RUN npm run build
 
-# Copy the rest of the application code
+
+# ---------- BACKEND BUILD ----------
+FROM node:20 AS backend
+
+WORKDIR /app/backend
+COPY back-end/package*.json ./
+RUN npm install
 COPY back-end/ .
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+# Copy frontend build into backend public folder
+COPY --from=frontend /app/frontend/dist ./public
 
-# Define environment variable
+EXPOSE 8000
 ENV PORT=8000
 
-# Run server.js when the container launches
 CMD ["node", "src/server.js"]
